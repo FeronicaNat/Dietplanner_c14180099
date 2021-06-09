@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'mydietmenu.dart';
 import 'planmealday.dart';
-import 'classAPI.dart';
 
 class MyList extends StatefulWidget {
   // const MyList({ Key? key }) : super(key: key);
@@ -10,8 +10,7 @@ class MyList extends StatefulWidget {
 }
 
 class _MyListState extends State<MyList> {
-
-  String jenisdiet="None";
+  String jenisdiet = "None";
 
   double targetCalories = 1000;
   String diet = 'None';
@@ -21,13 +20,29 @@ class _MyListState extends State<MyList> {
     //   targetCalories: targetCalories.toInt(),
     //   diet: diet,
     // );
+    DayPlan dayplans;
 
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(
-    //     builder: (_) => MyDietMenu(dayplan: dayplan),
-    //   ),
-    // );
+    DayPlan.setMealPlan(
+            targetCalories: targetCalories.toString(), diet: jenisdiet)
+        .then((hasil) {
+      dayplans = hasil;
+      print("HAII");
+      print(dayplans.dayplan);
+      print("ahaha");
+      print(dayplans.kalori.toString());
+      setState(() {
+        // print(dayplan.dayplan);
+        // print(dayplan.kalori);
+        // AlertDialog(actions: [Text(dayplan.kalori.toString())],);
+      });
+    });
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => MyDietMenu(dayplans),
+      ),
+    );
   }
 
   @override
@@ -44,10 +59,7 @@ class _MyListState extends State<MyList> {
         ),
         child: Center(
           child: Container(
-            margin: EdgeInsets.symmetric(
-              horizontal: 35,
-              vertical: 35
-            ),
+            margin: EdgeInsets.symmetric(horizontal: 35, vertical: 35),
             decoration: BoxDecoration(
               color: Colors.white.withOpacity(0.7),
               borderRadius: BorderRadius.circular(15),
@@ -56,14 +68,14 @@ class _MyListState extends State<MyList> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
-                  'Menu makan dietmu',
+                  'Your daily food planner',
                   style: TextStyle(
                     fontSize: 35,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 SizedBox(height: 20),
-                Text(targetCalories.truncate().toString()+" kalori"),
+                Text(targetCalories.truncate().toString() + " kalori"),
                 SliderTheme(
                   data: SliderTheme.of(context).copyWith(
                     thumbColor: Theme.of(context).primaryColor,
@@ -87,9 +99,11 @@ class _MyListState extends State<MyList> {
                       DropdownMenuItem<String>(
                           value: "None", child: Text("None")),
                       DropdownMenuItem<String>(
-                          value: "Lacto-Vegetarian", child: Text("Lacto-Vegetarian")),
+                          value: "Lacto-Vegetarian",
+                          child: Text("Lacto-Vegetarian")),
                       DropdownMenuItem<String>(
-                          value: "0vo-Vegetarian", child: Text("0vo-Vegetarian")),
+                          value: "0vo-Vegetarian",
+                          child: Text("0vo-Vegetarian")),
                       DropdownMenuItem<String>(
                           value: "Vegan", child: Text("Vegan")),
                       DropdownMenuItem<String>(
@@ -133,7 +147,30 @@ class _MyListState extends State<MyList> {
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                  onPressed: searchdayplan,
+                  onPressed: () async {
+                    DayPlan dayplans;
+
+                    DayPlan.setMealPlan(
+                            targetCalories: targetCalories.toString(),
+                            diet: jenisdiet)
+                        .then((hasil) {
+                      dayplans = hasil;
+                      print("HAII");
+                      print(dayplans.dayplan);
+                      print("ahaha");
+                      print(dayplans.kalori.toString());
+                      setState(() {
+                        // print(dayplans.dayplan);
+                        // print(dayplans.kalori);
+                        Navigator.pushNamed(context, '/MyDietMenu',
+                        arguments: dayplans);
+                        // AlertDialog(actions: [Text(dayplan.kalori.toString())],);
+                      });
+                    });
+
+
+                      
+                  },
                 ),
               ],
             ),
